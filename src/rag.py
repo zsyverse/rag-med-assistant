@@ -10,8 +10,7 @@ from langchain_core.output_parsers import StrOutputParser
 # 加载 .env 文件
 load_dotenv()
 
-# ================= 配置 =================
-# Chroma Cloud 配置（优先使用）
+# Chroma Cloud 配置
 CHROMA_API_KEY = os.getenv("CHROMA_API_KEY")
 CHROMA_TENANT = os.getenv("CHROMA_TENANT", "default_tenant")
 CHROMA_DATABASE = os.getenv("CHROMA_DATABASE", "default_database")

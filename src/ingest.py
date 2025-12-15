@@ -8,10 +8,10 @@ from langchain_core.documents import Document
 # 加载 .env 文件
 load_dotenv()
 
-    # ================= 配置 =================
+# 数据文件
 SOURCE_FILE = "QA_V0.md"       # 您上传的文件名
 
-# Chroma Cloud 配置（优先使用）
+# Chroma Cloud 配置（还没实现，会会退到本地版本）
 CHROMA_API_KEY = os.getenv("CHROMA_API_KEY")
 CHROMA_TENANT = os.getenv("CHROMA_TENANT", "default_tenant")
 CHROMA_DATABASE = os.getenv("CHROMA_DATABASE", "default_database")

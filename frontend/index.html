@@ -415,14 +415,26 @@
                 });
 
                 if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+                    const errorData = await response.json().catch(() => ({}));
+                    if (errorData.detail === 'Not Found') {
+                        throw new Error(`API 路径不存在。请检查 API_URL 配置是否正确（当前: ${API_URL}）`);
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}, detail: ${errorData.detail || '未知错误'}`);
                 }
 
                 const data = await response.json();
                 addMessage('assistant', data.answer);
             } catch (error) {
                 console.error('Error:', error);
-                addMessage('assistant', `抱歉，服务暂时不可用。错误信息：${error.message}`, true);
+                let errorMsg = '抱歉，服务暂时不可用。';
+                if (error.message.includes('Failed to fetch') || error.message.includes('NetworkError')) {
+                    errorMsg += '请确保 API 服务已启动（运行: uvicorn src.api:app --host 0.0.0.0 --port 8000）';
+                } else if (error.message.includes('Not Found') || error.message.includes('404')) {
+                    errorMsg += ` API 路径不存在。请检查 API 服务是否正常运行，或联系管理员。`;
+                } else {
+                    errorMsg += ` 错误信息：${error.message}`;
+                }
+                addMessage('assistant', errorMsg, true);
             } finally {
                 // 恢复发送按钮
                 sendButton.disabled = false;
