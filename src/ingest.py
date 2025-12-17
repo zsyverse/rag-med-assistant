@@ -59,7 +59,7 @@ def ingest_data():
         return
 
     print(f"✅ 成功解析出 {len(qa_list)} 条问答数据。")
-    print(f"   示例: Q: {qa_list[0]['question'][:20]}...")
+    print(f"   示例: Q: {qa_list[0]['question'][:20]}..." )
 
     # 转换 LangChain Document
     documents = []

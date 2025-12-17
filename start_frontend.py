@@ -33,20 +33,20 @@ def main():
         return
     
     try:
-        with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
-            print(f"🌐 前端服务器已启动！")
-            print(f"📂 服务目录: {FRONTEND_DIR}")
-            print(f"🔗 访问地址: http://localhost:{PORT}")
-            print(f"💡 请确保 API 服务运行在 http://localhost:8000")
-            print(f"\n按 Ctrl+C 停止服务器\n")
+    with socketserver.TCPServer(("", PORT), MyHTTPRequestHandler) as httpd:
+        print(f"🌐 前端服务器已启动！")
+        print(f"📂 服务目录: {FRONTEND_DIR}")
+        print(f"🔗 访问地址: http://localhost:{PORT}")
+        print(f"💡 请确保 API 服务运行在 http://localhost:8000")
+        print(f"\n按 Ctrl+C 停止服务器\n")
             httpd.serve_forever()
     except OSError as e:
         if "Address already in use" in str(e):
             print(f"❌ 错误: 端口 {PORT} 已被占用，请先关闭占用该端口的程序")
         else:
             print(f"❌ 错误: {e}")
-    except KeyboardInterrupt:
-        print("\n\n👋 服务器已停止")
+        except KeyboardInterrupt:
+            print("\n\n👋 服务器已停止")
 
 if __name__ == "__main__":
     main()
