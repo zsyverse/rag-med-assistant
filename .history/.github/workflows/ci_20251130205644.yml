@@ -1,0 +1,45 @@
+name: Continuous Integration Checks
+
+# 触发条件：当代码推送到 develop/main 或有 PR 提交到 develop/main 时
+on:
+  push:
+    branches: [ develop, main ]
+  pull_request:
+    branches: [ develop, main ]
+  workflow_dispatch: # 允许手动从 GitHub 界面触发
+
+jobs:
+  build-and-test:
+    # 运行 CI 的操作系统环境
+    runs-on: ubuntu-latest
+    
+    # 使用 Python 3.10
+    steps:
+    - name: 1. 检出代码 (Checkout Repository)
+      uses: actions/checkout@v4
+
+    - name: 2. 设置 Python 环境 (Setup Python)
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+
+    - name: 3. 安装依赖 (Install Dependencies)
+      # 确保您的 requirements.txt 包含 flake8 和 pytest
+      # 1. 安装 uv
+      run: |
+        curl -LsSf https://astral.sh/uv/install.sh | sh
+        source $HOME/.cargo/env
+        
+        # 2. 使用 uv 同步依赖 (速度极快)
+        # 这会读取 uv.lock 并安装完全一致的环境
+        uv sync --frozen
+    
+    # --- 阶段 A: 代码风格检查 (Linting) ---
+    - name: 4. 运行代码风格检查
+      # 使用 uv run 自动在虚拟环境中执行
+      run: uv run flake8 . --exit-zero --max-line-length=120 --exclude .venv
+
+    # --- 阶段 B: 运行单元测试 ---
+    - name: 5. 运行单元测试
+      run: uv run pytest
